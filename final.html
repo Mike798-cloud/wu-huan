@@ -1,7 +1,8 @@
-<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>资料整理结语 - 明真静修社</title><link rel="stylesheet" href="assets/site.css"></head>
-<body class="final-page"><main class="final-sheet">
-<div class="final-meta">明真静修社 · 旧期资料整理 / 卷末</div>
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>资料整理结语 - 明真静修社</title><link href="assets/site.css" rel="stylesheet"/></head>
+<body class="final-page page-final"><main class="final-sheet final-reading"><h1 class="sr-only">资料整理结语</h1>
+<div class="final-wordmark"><span class="brand-mark">明</span><span>明真静修社<small>旧期资料整理</small></span></div><div class="final-meta">明真静修社 · 旧期资料整理 / 卷末 / 阅览结语</div><button class="final-skip" id="final-skip" type="button">直接阅读全文</button>
 <div class="final-sequence" id="final-sequence">
 <section class="final-block"><p>眼不留形，还形于画。</p><p>耳不留声，还声于言。</p><p>鼻不留香，还香于物。</p><p>口不留名，还名于碑。</p><p>手不留物，还物于亲。</p></section>
 <section class="final-block final-quote"><p>“人走以后，家里通常会留下很多东西。”</p><p>“有些不能急着收。”</p><p>“但也不能一直不收。”</p><p>“不是东西拿走了，人就没了。”</p></section>
@@ -12,13 +13,14 @@
 <div class="endmark">— 阅览至此 —</div>
 </div>
 <audio id="final-audio" preload="auto" src="assets/audio/final_1.wav"></audio>
-<button id="final-audio-fallback" class="final-audio-fallback" hidden>播放卷末配乐</button>
+<button class="final-audio-fallback" hidden="" id="final-audio-fallback">播放卷末配乐</button>
 </main>
 <script>
 (function(){
- const blocks=[...document.querySelectorAll('.final-block')], end=document.querySelector('.endmark'), audio=document.getElementById('final-audio'), fallback=document.getElementById('final-audio-fallback');
+ const blocks=[...document.querySelectorAll('.final-block')], end=document.querySelector('.endmark'), audio=document.getElementById('final-audio'), fallback=document.getElementById('final-audio-fallback'), skip=document.getElementById('final-skip');
  const tracks=['final_1.wav','final_2.wav','final_3.wav','final_4.wav'];
- let i=0, fadeTimer=null;
+ const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ let i=0, fadeTimer=null, stopped=false;
  function fadeTo(target,ms,done){
    if(!audio) return done&&done();
    if(fadeTimer) clearInterval(fadeTimer);
@@ -31,12 +33,20 @@
    if(audio.paused||audio.currentTime<.15) swap(); else fadeTo(0,420,swap);
  }
  if(fallback) fallback.addEventListener('click',()=>{fallback.hidden=true;audio.play().then(()=>fadeTo(.20,600)).catch(()=>{});});
+ function showAll(){
+   stopped=true;
+   blocks.forEach(b=>b.classList.add('show'));
+   end.classList.add('show');
+   if(skip){skip.textContent='全文已显示';skip.disabled=true;}
+ }
+ if(skip)skip.addEventListener('click',showAll);
  function show(){
-   if(i>=blocks.length){setTimeout(()=>end.classList.add('show'),1800);return;}
+   if(stopped)return;
+   if(i>=blocks.length){setTimeout(()=>{if(!stopped)end.classList.add('show');},1800);return;}
    blocks[i].classList.add('show');
-   if(i<4) playTrack(i);
+   if(i<4&&!reduceMotion)playTrack(i);
    const wait=i===0?6500:(i===4?7200:5800); i++; setTimeout(show,wait);
  }
- setTimeout(show,900);
+ if(reduceMotion)showAll(); else setTimeout(show,900);
 })();
 </script></body></html>
