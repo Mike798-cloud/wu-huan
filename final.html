@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>资料整理结语 - 明真静修社</title><link rel="stylesheet" href="assets/site.css"></head>
+<body class="final-page"><main class="final-sheet">
+<div class="final-meta">明真静修社 · 旧期资料整理 / 卷末</div>
+<div class="final-sequence" id="final-sequence">
+<section class="final-block"><p>眼不留形，还形于画。</p><p>耳不留声，还声于言。</p><p>鼻不留香，还香于物。</p><p>口不留名，还名于碑。</p><p>手不留物，还物于亲。</p></section>
+<section class="final-block final-quote"><p>“人走以后，家里通常会留下很多东西。”</p><p>“有些不能急着收。”</p><p>“但也不能一直不收。”</p><p>“不是东西拿走了，人就没了。”</p></section>
+<section class="final-block final-quote"><p>“林遥的桌子先不要动。”</p><p>“衣服我自己收。”</p><p>“书也别碰。”</p><p>“床单不用换。”</p><p>“那个水杯她前一天还在用。”</p></section>
+<section class="final-block final-quote"><p>“故人之物不可轻散。”</p><p>“物存，则念有所附。”</p><p>“念有所附，则形声不绝。”</p></section>
+<section class="final-block final-quote"><p>“我以前总跟别人说，该收的东西得收。”</p><p>“现在才知道，这句话站在别人家门口说，很容易。”</p><p>“道理我都知道。”</p><p>“可那是我的女儿。”</p></section>
+<section class="final-block final-last">还，不是回来。</section>
+<div class="endmark">— 阅览至此 —</div>
+</div>
+<audio id="final-audio" preload="auto" src="assets/audio/final_1.wav"></audio>
+<button id="final-audio-fallback" class="final-audio-fallback" hidden>播放卷末配乐</button>
+</main>
+<script>
+(function(){
+ const blocks=[...document.querySelectorAll('.final-block')], end=document.querySelector('.endmark'), audio=document.getElementById('final-audio'), fallback=document.getElementById('final-audio-fallback');
+ const tracks=['final_1.wav','final_2.wav','final_3.wav','final_4.wav'];
+ let i=0, fadeTimer=null;
+ function fadeTo(target,ms,done){
+   if(!audio) return done&&done();
+   if(fadeTimer) clearInterval(fadeTimer);
+   const start=audio.volume, steps=12, step=ms/steps; let n=0;
+   fadeTimer=setInterval(()=>{n++; audio.volume=start+(target-start)*(n/steps); if(n>=steps){clearInterval(fadeTimer);fadeTimer=null;audio.volume=target;done&&done();}},step);
+ }
+ function playTrack(n){
+   if(!audio||n>=tracks.length) return;
+   const swap=()=>{audio.src='assets/audio/'+tracks[n]; audio.volume=0; const p=audio.play(); if(p&&p.catch)p.catch(()=>{if(fallback)fallback.hidden=false;}); fadeTo(.20,700);};
+   if(audio.paused||audio.currentTime<.15) swap(); else fadeTo(0,420,swap);
+ }
+ if(fallback) fallback.addEventListener('click',()=>{fallback.hidden=true;audio.play().then(()=>fadeTo(.20,600)).catch(()=>{});});
+ function show(){
+   if(i>=blocks.length){setTimeout(()=>end.classList.add('show'),1800);return;}
+   blocks[i].classList.add('show');
+   if(i<4) playTrack(i);
+   const wait=i===0?6500:(i===4?7200:5800); i++; setTimeout(show,wait);
+ }
+ setTimeout(show,900);
+})();
+</script></body></html>
